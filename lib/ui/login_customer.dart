@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginCustomer> {
                 ),
                 const SizedBox(height: 24),
 
-                // Login button
+                // Login debug
                 SizedBox(
                   width: 250,
                   child: ElevatedButton(
@@ -117,45 +117,65 @@ class _LoginPageState extends State<LoginCustomer> {
                       backgroundColor: const Color(0xFF2E1A47),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () async {
-                      final email = _emailController.text.trim();
-                      final password = _passwordController.text;
-
-                      if (email.isEmpty || password.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Please fill in all required fields.',
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-
-                      try {
-                        await ApiService.login(
-                          email: email,
-                          password: password,
-                          role: 'customer',
-                        );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoggedInCustomer()),
-                        );
-                      } catch (e) {
-                        final errorMessage = e.toString().replaceFirst(
-                          'Exception: ',
-                          '',
-                        );
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(errorMessage)));
-                      }
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoggedInCustomer(),
+                        ),
+                      );
                     },
-
                     child: const Text('Login', style: TextStyle(fontSize: 16)),
                   ),
                 ),
+
+                // Login button
+                // SizedBox(
+                //   width: 250,
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: const Color(0xFF2E1A47),
+                //       padding: const EdgeInsets.symmetric(vertical: 14),
+                //     ),
+                //     onPressed: () async {
+                //       final email = _emailController.text.trim();
+                //       final password = _passwordController.text;
+
+                //       if (email.isEmpty || password.isEmpty) {
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           const SnackBar(
+                //             content: Text(
+                //               'Please fill in all required fields.',
+                //             ),
+                //           ),
+                //         );
+                //         return;
+                //       }
+
+                //       try {
+                //         await ApiService.login(
+                //           email: email,
+                //           password: password,
+                //           role: 'customer',
+                //         );
+                //         Navigator.pushReplacement(
+                //           context,
+                //           MaterialPageRoute(builder: (context) => LoggedInCustomer()),
+                //         );
+                //       } catch (e) {
+                //         final errorMessage = e.toString().replaceFirst(
+                //           'Exception: ',
+                //           '',
+                //         );
+                //         ScaffoldMessenger.of(
+                //           context,
+                //         ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                //       }
+                //     },
+
+                //     child: const Text('Login', style: TextStyle(fontSize: 16)),
+                //   ),
+                // ),
                 const SizedBox(height: 16),
 
                 // Sign-up link

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart'; // flutter pub add url_launcher
 // import 'logged_in.dart';
 import 'orders.dart';
-import 'messages.dart';
 import 'profile.dart';
 import '../models/collection_products.dart';
 import 'product_data.dart';
@@ -36,12 +35,7 @@ class LoggedInCustomer extends StatelessWidget {
             context,
             'My Orders',
             const OrdersPage(),
-          ), // orders.dart
-          _buildMenuItem(
-            context,
-            'Messages',
-            const MessagesPage(),
-          ), // messages.dart
+          ), // orders.dartrt
           _buildMenuItem(context, 'Profile', const ProfilePage()), // login.dart
           const SizedBox(width: 24),
         ],

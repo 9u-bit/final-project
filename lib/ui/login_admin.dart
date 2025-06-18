@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seseart/ui/logged_in_admin.dart';
 import 'package:seseart/ui/signup_admin.dart';
-import '/services/api_service.dart';
+import '../services/api_service.dart';
 
 class LoginAdmin extends StatefulWidget {
   const LoginAdmin({super.key});

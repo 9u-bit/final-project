@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart'; // flutter pub add url_launcher
 // import 'home.dart';
 // import 'product.dart';
+import '../ui/orders_page_admin.dart';
+import '../ui/product_page_admin.dart';
 
 class LoggedInAdmin extends StatelessWidget {
   const LoggedInAdmin({super.key});
@@ -36,7 +38,11 @@ class LoggedInAdmin extends StatelessWidget {
           ),
         ),
         actions: [
-          _buildMenuItem(context, 'Home', const LoggedInAdmin()), // logged_in_admin.dart
+          _buildMenuItem(
+            context,
+            'Home',
+            const LoggedInAdmin(),
+          ), // logged_in_admin.dart
           const SizedBox(width: 24),
         ],
       ),
@@ -71,19 +77,27 @@ class LoggedInAdmin extends StatelessWidget {
                     spacing: 16,
                     runSpacing: 16,
                     children: [
-                      _buildStatCard('Total Products', '0', Icons.inventory), // NOTE: Change later
-                      _buildStatCard(
+                      _buildStatButton(
+                        context,
+                        'Total Products',
+                        '0', // Needs logic
+                        Icons.inventory,
+                        const ProductPageAdmin(),
+                      ),
+                      _buildStatButton(
+                        context,
                         'Pending Orders',
-                        '0',
+                        '0', // Needs logic
                         Icons.pending_actions,
-                      ), // NOTE: Change later
+                        const OrdersPageAdmin(),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 44),
                 ],
               ),
             ),
-            const SizedBox(height: 200),
+            const SizedBox(height: 205),
             // Footer
             Container(
               width: double.infinity,
@@ -237,38 +251,47 @@ class LoggedInAdmin extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String count, IconData icon) {
-    return Container(
-      width: 200,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 32, color: Color(0xFF2E1A47)),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                count,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+  Widget _buildStatButton(BuildContext context, String title, String count, IconData icon, Widget page) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page),
+        );
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: 200,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: const [
+            BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 32, color: const Color(0xFF2E1A47)),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  count,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                title,
-                style: const TextStyle(fontSize: 14, color: Colors.black54),
-              ),
-            ],
-          ),
-        ],
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
