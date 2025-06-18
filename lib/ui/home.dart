@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 // import 'orders.dart';
 // import 'messages.dart';
 import 'login_customer.dart';
-import 'product.dart';
+import '../models/collection_products.dart';
 import 'product_data.dart';
 import 'product_card.dart';
 

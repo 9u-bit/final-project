@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'product.dart';
+import '../models/collection_products.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -21,29 +21,12 @@ class ProductCard extends StatelessWidget {
                   top: Radius.circular(12),
                 ),
                 child: Image.asset(
-                  product.imageUrl,
+                  product.image,
                   height: 150,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
               ),
-              // Show offer offer badge if true
-              if (product.isOffer)
-                Positioned(
-                  top: 8,
-                  left: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2, ),
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      'Offer',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ),
             ],
           ),
           const SizedBox(height: 8),
