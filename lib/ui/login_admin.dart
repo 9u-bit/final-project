@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginAdmin> {
                 ),
                 const SizedBox(height: 24),
 
-                // Login button
+                // Login debug
                 SizedBox(
                   width: 250,
                   child: ElevatedButton(
@@ -108,45 +108,65 @@ class _LoginPageState extends State<LoginAdmin> {
                       backgroundColor: const Color(0xFF2E1A47),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () async {
-                      final email = _emailController.text.trim();
-                      final password = _passwordController.text;
-
-                      if (email.isEmpty || password.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Please fill in all required fields.',
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-
-                      try {
-                        await ApiService.login(
-                          email: email,
-                          password: password,
-                          role: 'admin',
-                        );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoggedInAdmin()),
-                        );
-                      } catch (e) {
-                        final errorMessage = e.toString().replaceFirst(
-                          'Exception: ',
-                          '',
-                        );
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(errorMessage)));
-                      }
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoggedInAdmin(),
+                        ),
+                      );
                     },
-
                     child: const Text('Login', style: TextStyle(fontSize: 16)),
                   ),
                 ),
+
+                // Login button
+                // SizedBox(
+                //   width: 250,
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: const Color(0xFF2E1A47),
+                //       padding: const EdgeInsets.symmetric(vertical: 14),
+                //     ),
+                //     onPressed: () async {
+                //       final email = _emailController.text.trim();
+                //       final password = _passwordController.text;
+
+                //       if (email.isEmpty || password.isEmpty) {
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           const SnackBar(
+                //             content: Text(
+                //               'Please fill in all required fields.',
+                //             ),
+                //           ),
+                //         );
+                //         return;
+                //       }
+
+                //       try {
+                //         await ApiService.login(
+                //           email: email,
+                //           password: password,
+                //           role: 'admin',
+                //         );
+                //         Navigator.pushReplacement(
+                //           context,
+                //           MaterialPageRoute(builder: (context) => LoggedInAdmin()),
+                //         );
+                //       } catch (e) {
+                //         final errorMessage = e.toString().replaceFirst(
+                //           'Exception: ',
+                //           '',
+                //         );
+                //         ScaffoldMessenger.of(
+                //           context,
+                //         ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                //       }
+                //     },
+
+                //     child: const Text('Login', style: TextStyle(fontSize: 16)),
+                //   ),
+                // ),
                 const SizedBox(height: 16),
 
                 // Sign-up link

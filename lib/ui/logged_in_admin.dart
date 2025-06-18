@@ -72,7 +72,6 @@ class LoggedInAdmin extends StatelessWidget {
                     runSpacing: 16,
                     children: [
                       _buildStatCard('Total Products', '0', Icons.inventory), // NOTE: Change later
-                      _buildStatCard('New Messages', '', Icons.message), // NOTE: Change later
                       _buildStatCard(
                         'Pending Orders',
                         '0',
