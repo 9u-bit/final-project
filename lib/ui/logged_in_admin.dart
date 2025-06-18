@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 // import 'package:auto_size_text/auto_size_text.dart'; // flutter pub add auto_size_text
 // import 'package:url_launcher/url_launcher.dart'; // flutter pub add url_launcher
 // import 'home.dart';
-// import 'orders.dart';
-// import 'messages.dart';
-import 'login.dart';
-import 'product.dart';
-import 'product_data.dart';
-import 'product_card.dart';
+// import 'product.dart';
 
-final List<Product> products = getProducts();
+class LoggedInAdmin extends StatelessWidget {
+  const LoggedInAdmin({super.key});
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  // NOTE: Will be changed to admin name later
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good morning, Admin!';
+    } else if (hour < 18) {
+      return 'Good afternoon, Admin!';
+    } else {
+      return 'Good evening, Admin!';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,7 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         titleSpacing: 24,
         title: const Text(
-          'S.ESE.ART',
+          'S.ESE.ART Admin',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -31,22 +36,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
         actions: [
-          _buildMenuItem(context, 'Home', const HomePage()), // home.dart
-          // _buildMenuItem(
-          //   context,
-          //   'My Orders',
-          //   const OrdersPage(),
-          // ), // orders.dart
-          // _buildMenuItem(
-          //   context,
-          //   'Messages',
-          //   const MessagesPage(),
-          // ), // messages.dart
-          _buildMenuItem(
-            context,
-            'Login / Signup',
-            const LoginPage(),
-          ), // login.dart
+          _buildMenuItem(context, 'Home', const LoggedInAdmin()), // logged_in_admin.dart
           const SizedBox(width: 24),
         ],
       ),
@@ -55,121 +45,46 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(150, 30, 150, 50),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Banner
-                  Container(
-                    height: 250,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Stack(
-                      children: [
-                        // Image
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              'assets/banner.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        // Text container
-                        Positioned(
-                          left: 24,
-                          top: 30,
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            color: Colors.black.withOpacity(0.5),
-                            child: const Text(
-                              'Discover Unique Artworks',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                  Text(
+                    _getGreeting(),
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2E1A47),
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // About Us
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const Text(
+                    'Dashboard Overview',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2E1A47),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
                     children: [
-                      // Left-side image
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          'assets/about_us.jpg',
-                          width: 500,
-                          height: 250,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(width: 24),
-                      // Right-side text
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'About us!',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 12),
-                            Text(
-                              'We are a passionate team of students from Centro Profesional JOYFE, currently in our final year of Desarrollo de Aplicaciones Multiplataforma (DAM). '
-                              'This project is our Trabajo de Fin de Grado (TFG), a milestone that reflects everything we’ve learned and achieved over the past two years.\n\n'
-                              'S.ESE.ART was born from our shared love for technology and creativity. We wanted to create a platform that’s both simple and elegant, '
-                              'where digital artworks can be discovered, appreciated, and shared by everyone.',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
+                      _buildStatCard('Total Products', '0', Icons.inventory), // NOTE: Change later
+                      _buildStatCard('New Messages', '', Icons.message), // NOTE: Change later
+                      _buildStatCard(
+                        'Pending Orders',
+                        '0',
+                        Icons.pending_actions,
+                      ), // NOTE: Change later
                     ],
                   ),
-                  const SizedBox(height: 40),
-                  // Product cards
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'All Products',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: products.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 0.7,
-                        ),
-                    itemBuilder: (context, index) {
-                      return ProductCard(product: products[index]);
-                    },
-                  ),
+                  const SizedBox(height: 44),
                 ],
               ),
             ),
+            const SizedBox(height: 200),
             // Footer
             Container(
               width: double.infinity,
@@ -319,6 +234,42 @@ class HomePage extends StatelessWidget {
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String title, String count, IconData icon) {
+    return Container(
+      width: 200,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 32, color: Color(0xFF2E1A47)),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                count,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

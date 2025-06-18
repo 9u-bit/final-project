@@ -1,38 +1,30 @@
 import 'package:flutter/material.dart';
-import 'logged_in.dart';
+import '/services/api_service.dart';
+import 'logged_in_customer.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignupCustomer extends StatefulWidget {
+  const SignupCustomer({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignupCustomer> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpPageState extends State<SignupCustomer> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _surnameController = TextEditingController();
-  final TextEditingController _secondSurnameController =
-      TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
 
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
     _nameController.dispose();
-    _surnameController.dispose();
-    _secondSurnameController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -122,15 +114,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                 children: [
                                   _buildTextField(_nameController, 'Name'),
                                   const SizedBox(height: 16),
-                                  _buildTextField(
-                                    _surnameController,
-                                    'Surname',
-                                  ),
-                                  const SizedBox(height: 16),
-                                  _buildTextField(
-                                    _secondSurnameController,
-                                    'Second Surname (Optional)',
-                                  ),
                                   const SizedBox(height: 16),
                                   _buildTextField(
                                     _phoneController,
@@ -167,17 +150,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                     },
                                   ),
                                   const SizedBox(height: 16),
-                                  _buildTextField(
-                                    _confirmPasswordController,
-                                    'Confirm Password',
-                                    obscureText: _obscureConfirmPassword,
-                                    toggleObscure: () {
-                                      setState(() {
-                                        _obscureConfirmPassword =
-                                            !_obscureConfirmPassword;
-                                      });
-                                    },
-                                  ),
                                 ],
                               ),
                             ),
@@ -186,13 +158,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         : Column(
                           children: [
                             _buildTextField(_nameController, 'Name'),
-                            const SizedBox(height: 16),
-                            _buildTextField(_surnameController, 'Surname'),
-                            const SizedBox(height: 16),
-                            _buildTextField(
-                              _secondSurnameController,
-                              'Second Surname (Optional)',
-                            ),
                             const SizedBox(height: 16),
                             _buildTextField(
                               _phoneController,
@@ -219,17 +184,6 @@ class _SignUpPageState extends State<SignUpPage> {
                               },
                             ),
                             const SizedBox(height: 16),
-                            _buildTextField(
-                              _confirmPasswordController,
-                              'Confirm Password',
-                              obscureText: _obscureConfirmPassword,
-                              toggleObscure: () {
-                                setState(() {
-                                  _obscureConfirmPassword =
-                                      !_obscureConfirmPassword;
-                                });
-                              },
-                            ),
                           ],
                         );
                   },
@@ -245,11 +199,99 @@ class _SignUpPageState extends State<SignUpPage> {
                       backgroundColor: const Color(0xFF2E1A47),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoggedInPage()),
-                      );
+                    onPressed: () async {
+                      final name = _nameController.text.trim();
+                      final phone = _phoneController.text.trim();
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text;
+                      final address = _addressController.text;
+
+                      // 1. No empty fields
+                      if (name.isEmpty ||
+                          phone.isEmpty ||
+                          email.isEmpty ||
+                          password.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Please fill in all required fields.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      // 2. Phone number: digits only
+                      if (!RegExp(r'^\d+$').hasMatch(phone)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Phone number must contain digits only.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      // 3. Email format: must contain @ and a dot suffix
+                      if (!RegExp(
+                        r'^[\w\.-]+@[\w\.-]+\.\w{2,}$',
+                      ).hasMatch(email)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Please enter a valid email address.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      // 4. Password format: 8-15 chars, upper, lower, number, special char
+                      if (!RegExp(
+                        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~%^()_\-+=]).{8,15}$',
+                      ).hasMatch(password)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Password must be 8-15 characters, include uppercase, lowercase, number, and special character.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      try {
+                        final userData = {
+                          'name': name,
+                          'phone': phone,
+                          'email': email,
+                          'password': password,
+                          'address' : address,
+                          'permisos': [],
+                          'role': 'customer',
+                          'created_at': DateTime.now().toIso8601String(),
+                        };
+
+                        final message = await ApiService.register(userData);
+
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(message)));
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoggedInCustomer(),
+                          ),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Sign-up failed: ${e.toString()}'),
+                          ),
+                        );
+                      }
                     },
                     child: const Text(
                       'Sign Up',

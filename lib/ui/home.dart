@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 // import 'package:auto_size_text/auto_size_text.dart'; // flutter pub add auto_size_text
 // import 'package:url_launcher/url_launcher.dart'; // flutter pub add url_launcher
-// import 'logged_in.dart';
-import 'orders.dart';
-import 'messages.dart';
-import 'profile.dart';
+// import 'home.dart';
+// import 'orders.dart';
+// import 'messages.dart';
+import 'login_customer.dart';
 import 'product.dart';
 import 'product_data.dart';
 import 'product_card.dart';
 
 final List<Product> products = getProducts();
 
-class LoggedInPage extends StatelessWidget {
-  const LoggedInPage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +31,21 @@ class LoggedInPage extends StatelessWidget {
           ),
         ),
         actions: [
-          _buildMenuItem(context, 'Home', const LoggedInPage()), // home.dart
+          _buildMenuItem(context, 'Home', const HomePage()), // home.dart
+          // _buildMenuItem(
+          //   context,
+          //   'My Orders',
+          //   const OrdersPage(),
+          // ), // orders.dart
+          // _buildMenuItem(
+          //   context,
+          //   'Messages',
+          //   const MessagesPage(),
+          // ), // messages.dart
           _buildMenuItem(
             context,
-            'My Orders',
-            const OrdersPage(),
-          ), // orders.dart
-          _buildMenuItem(
-            context,
-            'Messages',
-            const MessagesPage(),
-          ), // messages.dart
-          _buildMenuItem(
-            context,
-            'Profile',
-            const ProfilePage(),
+            'Login / Signup',
+            const LoginCustomer(),
           ), // login.dart
           const SizedBox(width: 24),
         ],

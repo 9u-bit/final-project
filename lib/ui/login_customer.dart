@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'signup.dart';
-import 'logged_in.dart';
+import '/services/api_service.dart';
+import 'signup_customer.dart';
+import 'logged_in_customer.dart';
+import 'login_admin.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginCustomer extends StatefulWidget {
+  const LoginCustomer({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginCustomer> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginCustomer> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -29,12 +31,20 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: const Color(0xFF2E1A47),
         elevation: 0,
         titleSpacing: 24,
-        title: const Text(
-          'S.ESE.ART',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+        title: GestureDetector(
+          onLongPress: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginAdmin()),
+            );
+          },
+          child: const Text(
+            'S.ESE.ART',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -107,12 +117,42 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: const Color(0xFF2E1A47),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoggedInPage()),
-                      );
+                    onPressed: () async {
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text;
+
+                      if (email.isEmpty || password.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Please fill in all required fields.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
+                      try {
+                        await ApiService.login(
+                          email: email,
+                          password: password,
+                          role: 'customer',
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoggedInCustomer()),
+                        );
+                      } catch (e) {
+                        final errorMessage = e.toString().replaceFirst(
+                          'Exception: ',
+                          '',
+                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                      }
                     },
+
                     child: const Text('Login', style: TextStyle(fontSize: 16)),
                   ),
                 ),
@@ -124,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignUpPage(),
+                        builder: (context) => const SignupCustomer(),
                       ),
                     );
                   },
