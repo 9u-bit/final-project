@@ -5,8 +5,13 @@ import '/ui/home.dart';
 
 class ProductClicked extends StatefulWidget {
   final Product product;
+  final bool isLoggedIn;
 
-  const ProductClicked({super.key, required this.product});
+  const ProductClicked({
+    super.key,
+    required this.product,
+    this.isLoggedIn = false,
+  });
 
   @override
   State<ProductClicked> createState() => _ProductClickedState();
@@ -151,19 +156,30 @@ class _ProductClickedState extends State<ProductClicked> {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    // Unfinished logic here!
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Product added to cart!'),
-                      ),
-                    );
-                  },
+                  onPressed:
+                      widget.isLoggedIn
+                          ? () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Product added to cart!'),
+                              ),
+                            );
+                          }
+                          : () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Please log in to add products to cart.',
+                                ),
+                              ),
+                            );
+                          },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2E1A47),
                   ),
                   child: const Text('Add to cart'),
                 ),
+
                 const SizedBox(width: 16),
                 OutlinedButton(
                   onPressed: _launchInstagram,

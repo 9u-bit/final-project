@@ -154,7 +154,7 @@ class LoggedInCustomer extends StatelessWidget {
                           childAspectRatio: 0.7,
                         ),
                     itemBuilder: (context, index) {
-                      return ProductCard(product: products[index]);
+                      return ProductCard(product: products[index], isLoggedIn: true);
                     },
                   ),
                 ],

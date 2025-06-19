@@ -4,7 +4,8 @@ import '../ui/product_clicked.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
-  const ProductCard({super.key, required this.product});
+  final bool isLoggedIn;
+  const ProductCard({super.key, required this.product, this.isLoggedIn = false});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class ProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ProductClicked(product: product),
+            builder: (_) => ProductClicked(product: product, isLoggedIn: isLoggedIn),
           ),
         );
       },
